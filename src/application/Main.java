@@ -1,8 +1,15 @@
 package application;
 
 
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
+
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -15,50 +22,40 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
 public class Main extends Application {
-	@Override
-	public void start(Stage primaryStage) {
-		HBox root = new HBox();
-		root.setPrefWidth(1200);
-		root.setPrefHeight(1500);
-		root.setAlignment(Pos.CENTER_LEFT);
-		root.setSpacing(20);
-		
-		ImageView imgView = new ImageView(new Image("@C:\\Users\\LeeTaeHyun\\Documents\\image1.jpg"));
-		
-		imgView.prefHeight(1000);
-		imgView.prefWidth(500);
-		VBox root2 = new VBox();
-		HBox workbook = new HBox();
-		TextField workbook_title = new TextField();
-		TextField workbook_number = new TextField();
-		Button button = new Button();
-		button.setText("추가");
-		button.setOnAction(event -> {
-			
-		});
-		
-		root.getChildren().add(imgView);
-		root.setAlignment(Pos.CENTER_LEFT);
-		root.getChildren().add(root2);
-		workbook.getChildren().add(workbook_title);
-		workbook.getChildren().add(workbook_number);
-		root2.getChildren().add(workbook);
-		root2.setAlignment(Pos.BASELINE_LEFT);
-		root2.getChildren().add(button);
-		
-		
-		
-		Scene scene = new Scene(root);
-		
-		primaryStage.setTitle("오답노트 생성 프로그램");
-		primaryStage.setScene(scene);
-		primaryStage.show();
-		
-	}
-	
-	
-	
 	public static void main(String[] args) {
-		launch(args);
-	}
+	    Application.launch(args);
+	  }
+	
+	@Override
+	public void start(Stage stage) {
+		System.out.println("start");
+		String imagePath = "C:\\Users\\LeeTaeHyun\\Documents\\image1.jpg";
+		Image image;
+		BufferedImage temp;
+		try{
+			temp = ImageIO.read(new File(imagePath));
+		}catch(IOException e){System.out.println("IO Exception");return;}
+		image = SwingFXUtils.toFXImage(temp, null);
+	    ImageView imageView = new ImageView(image);
+
+	    Button saveBtn = new Button("Save Image");
+	    saveBtn.setOnAction(e -> saveToFile(image));
+
+	    VBox root = new VBox(10, imageView, saveBtn);
+	    Scene scene = new Scene(root);
+	    stage.setScene(scene);
+	    stage.setTitle("");
+	    stage.show();
+	  }
+
+	public static void saveToFile(Image image) {
+		File outputFile = new File("C:\\JavaFX");
+		BufferedImage bImage = SwingFXUtils.fromFXImage(image, null);
+		try {
+			ImageIO.write(bImage, "png", outputFile);
+	    } catch (IOException e) {
+	    	System.out.println("file index not found");
+	    	throw new RuntimeException(e);
+	    }
+	  }
 }

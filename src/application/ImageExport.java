@@ -15,7 +15,7 @@ import javafx.stage.Stage;
 import javax.imageio.ImageIO;
 
 public class ImageExport extends Application {
-  public static void imageExport(String[] args) {
+  public static void main(String[] args) {
     Application.launch(args);
   }
 
