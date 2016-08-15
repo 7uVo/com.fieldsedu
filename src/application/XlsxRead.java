@@ -1,78 +1,78 @@
-package application;
-import java.io.FileInputStream;
-
-import org.apache.poi.xssf.usermodel.XSSFCell;
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-//¿¢¼¿ÆÄÀÏ¿¡¼­ stringÀ» ¾ò¾î¿È
-//¿øÇÏ´Â ºÎºÐ¸¸ °¡Áö°í ¿Ã ¼ö ÀÖÀ» µí
-public class XlsxRead {
-	public static String xlsxRead(String path) {
-		XSSFRow row;
-		XSSFCell cell;
-		String str = null;
-		try {
-			FileInputStream inputStream = new FileInputStream("C:\\Users\\LeeTaeHyun\\Documents\\file.xlsx");
-			XSSFWorkbook workbook = new XSSFWorkbook(inputStream);
-
-			//sheet¼ö Ãëµæ
-			int sheetCn = workbook.getNumberOfSheets();
-			System.out.println("sheet¼ö : " + sheetCn);
-			
-			for(int cn = 0; cn < sheetCn; cn++){
-				System.out.println("ÃëµæÇÏ´Â sheet ÀÌ¸§ : " + workbook.getSheetName(cn));
-				System.out.println(workbook.getSheetName(cn) + " sheet µ¥ÀÌÅÍ Ãëµæ ½ÃÀÛ");
-				
-				//0¹øÂ° sheet Á¤º¸ Ãëµæ
-				XSSFSheet sheet = workbook.getSheetAt(cn);
-				
-				//ÃëµæµÈ sheet¿¡¼­ rows¼ö Ãëµæ
-				int rows = sheet.getPhysicalNumberOfRows();
-				System.out.println(workbook.getSheetName(cn) + " sheetÀÇ row¼ö : " + rows);
-				
-				//ÃëµæµÈ row¿¡¼­ Ãëµæ´ë»ó cell¼ö Ãëµæ
-				int cells = sheet.getRow(cn).getPhysicalNumberOfCells(); //
-				System.out.println(workbook.getSheetName(cn) + " sheetÀÇ row¿¡ Ãëµæ´ë»ó cell¼ö : " + cells);
-				
-				for (int r = 0; r < rows; r++) {
-					row = sheet.getRow(r); // row °¡Á®¿À±â
-					if (row != null) {
-						for (int c = 0; c < cells; c++) {
-							cell = row.getCell(c);
-							if (cell != null) {
-								String value = null;
-								switch (cell.getCellType()) {
-								case XSSFCell.CELL_TYPE_FORMULA:
-									value = cell.getCellFormula();
-									break;
-								case XSSFCell.CELL_TYPE_NUMERIC:
-									value = "" + cell.getNumericCellValue();
-									break;
-								case XSSFCell.CELL_TYPE_STRING:
-									value = "" + cell.getStringCellValue();
-									break;
-								case XSSFCell.CELL_TYPE_BLANK:
-									value = "[null ¾Æ´Ñ °ø¹é]";
-									break;
-								case XSSFCell.CELL_TYPE_ERROR:
-									value = "" + cell.getErrorCellValue();
-									break;
-								default:
-								}
-								System.out.print(value + "\t");
-							} else {
-								System.out.print("[null]\t");
-							}
-						} // for(c) ¹®
-						System.out.print("\n");
-					}
-				} // for(r) ¹®
-			}
-			workbook.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return str;
-	}
-}
+//package application;
+//import java.io.FileInputStream;
+//
+//import org.apache.poi.xssf.usermodel.XSSFCell;
+//import org.apache.poi.xssf.usermodel.XSSFRow;
+//import org.apache.poi.xssf.usermodel.XSSFSheet;
+//import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+////ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ï¿½ï¿½ stringï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+////ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ÎºÐ¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½
+//public class XlsxRead {
+//	public static String xlsxRead(String path) {
+//		XSSFRow row;
+//		XSSFCell cell;
+//		String str = null;
+//		try {
+//			FileInputStream inputStream = new FileInputStream("C:\\Users\\LeeTaeHyun\\Documents\\file.xlsx");
+//			XSSFWorkbook workbook = new XSSFWorkbook(inputStream);
+//
+//			//sheetï¿½ï¿½ ï¿½ï¿½ï¿½
+//			int sheetCn = workbook.getNumberOfSheets();
+//			System.out.println("sheetï¿½ï¿½ : " + sheetCn);
+//			
+//			for(int cn = 0; cn < sheetCn; cn++){
+//				System.out.println("ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ sheet ï¿½Ì¸ï¿½ : " + workbook.getSheetName(cn));
+//				System.out.println(workbook.getSheetName(cn) + " sheet ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
+//				
+//				//0ï¿½ï¿½Â° sheet ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
+//				XSSFSheet sheet = workbook.getSheetAt(cn);
+//				
+//				//ï¿½ï¿½ï¿½ï¿½ sheetï¿½ï¿½ï¿½ï¿½ rowsï¿½ï¿½ ï¿½ï¿½ï¿½
+//				int rows = sheet.getPhysicalNumberOfRows();
+//				System.out.println(workbook.getSheetName(cn) + " sheetï¿½ï¿½ rowï¿½ï¿½ : " + rows);
+//				
+//				//ï¿½ï¿½ï¿½ï¿½ rowï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ cellï¿½ï¿½ ï¿½ï¿½ï¿½
+//				int cells = sheet.getRow(cn).getPhysicalNumberOfCells(); //
+//				System.out.println(workbook.getSheetName(cn) + " sheetï¿½ï¿½ rowï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ cellï¿½ï¿½ : " + cells);
+//				
+//				for (int r = 0; r < rows; r++) {
+//					row = sheet.getRow(r); // row ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+//					if (row != null) {
+//						for (int c = 0; c < cells; c++) {
+//							cell = row.getCell(c);
+//							if (cell != null) {
+//								String value = null;
+//								switch (cell.getCellType()) {
+//								case XSSFCell.CELL_TYPE_FORMULA:
+//									value = cell.getCellFormula();
+//									break;
+//								case XSSFCell.CELL_TYPE_NUMERIC:
+//									value = "" + cell.getNumericCellValue();
+//									break;
+//								case XSSFCell.CELL_TYPE_STRING:
+//									value = "" + cell.getStringCellValue();
+//									break;
+//								case XSSFCell.CELL_TYPE_BLANK:
+//									value = "[null ï¿½Æ´ï¿½ ï¿½ï¿½ï¿½ï¿½]";
+//									break;
+//								case XSSFCell.CELL_TYPE_ERROR:
+//									value = "" + cell.getErrorCellValue();
+//									break;
+//								default:
+//								}
+//								System.out.print(value + "\t");
+//							} else {
+//								System.out.print("[null]\t");
+//							}
+//						} // for(c) ï¿½ï¿½
+//						System.out.print("\n");
+//					}
+//				} // for(r) ï¿½ï¿½
+//			}
+//			workbook.close();
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		return str;
+//	}
+//}

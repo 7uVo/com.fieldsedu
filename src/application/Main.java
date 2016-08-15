@@ -29,12 +29,17 @@ public class Main extends Application {
 	@Override
 	public void start(Stage stage) {
 		System.out.println("start");
-		String imagePath = "C:\\Users\\LeeTaeHyun\\Documents\\image1.jpg";
+		String Path = "//Users//LTH//Desktop";
+		String imagePath = "//1.jpg";
 		Image image;
 		BufferedImage temp;
 		try{
-			temp = ImageIO.read(new File(imagePath));
-		}catch(IOException e){System.out.println("IO Exception");return;}
+			temp = ImageIO.read(new File(Path + imagePath));
+		}catch(IOException e){
+			System.out.println("IO Exception occured");
+			System.out.println("check file");
+			return;
+			}
 		image = SwingFXUtils.toFXImage(temp, null);
 	    ImageView imageView = new ImageView(image);
 
