@@ -19,9 +19,11 @@ public class SceneMain {
 	VBox left, right;
 	ImageView imageViewMain, imageViewTemp;
 	ComboBox<String> listWorkbook, listSchool, listSemester, listGrade;
-	Label workbook, school, semester, grade, problem;
-	TextField problemNumber;
+	Label workbook, school, semester, grade, problem, setname;
+	TextField problemNumber, setName;
 	Button addButton, exportButton;
+	
+	
 	
 	SceneMain(Page page){
 		HBox root = new HBox();
@@ -51,7 +53,8 @@ public class SceneMain {
 		listGrade.setItems(FXCollections.observableArrayList("1학년","2학년","3학년"));
 		
 		problemNumber = new TextField();
-		
+		setName = new TextField();
+		setname = new Label("이름 설정");
 		setPath = new HBox();
 		setPath.getChildren().add(school);
 		setPath.getChildren().add(listSchool);
@@ -72,6 +75,8 @@ public class SceneMain {
 		left.getChildren().add(imageViewMain);
 		right.getChildren().add(setPath);
 		right.getChildren().add(imageViewTemp);
+		right.getChildren().add(setname);
+		right.getChildren().add(setName);
 		right.getChildren().add(exportButton);
 		
 		root.getChildren().add(left);
