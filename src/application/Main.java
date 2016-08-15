@@ -22,34 +22,49 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
 public class Main extends Application {
+	Page page;
+	String basic_path;
+	SceneMain sceneMain;
 	public static void main(String[] args) {
 	    Application.launch(args);
 	  }
-	
+	@Override
+	public void init(){
+		//basic_path 에 기본적인 path로 초기화 할 것
+		basic_path = new String("C:\\Users\\LeeTaeHyun\\Documents");
+		page = new Page(basic_path+"\\image1.jpg");
+		sceneMain = new SceneMain(page);
+	}
 	@Override
 	public void start(Stage stage) {
-		System.out.println("start");
-		String imagePath = "C:\\Users\\LeeTaeHyun\\Documents\\image1.jpg";
-		Image image;
-		BufferedImage temp;
-		try{
-			temp = ImageIO.read(new File(imagePath));
-		}catch(IOException e){System.out.println("IO Exception");return;}
-		image = SwingFXUtils.toFXImage(temp, null);
-	    ImageView imageView = new ImageView(image);
+		
+		//다른 path들은 이제 basic_path에 concatenation 할 수 있게 구현할 것
+		String imagePath = "image1.jpg";
+		
 
-	    Button saveBtn = new Button("Save Image");
-	    saveBtn.setOnAction(e -> saveToFile(image));
-
-	    VBox root = new VBox(10, imageView, saveBtn);
-	    Scene scene = new Scene(root);
-	    stage.setScene(scene);
-	    stage.setTitle("");
+	    sceneMain.addButton.setOnAction(e -> {
+	    	//imagePath 를 설정 -> 어디서? combobox의 인자들을 묶을 것 and 모두 체크가 되어있지 않을 경우 Exception 발생시킬 것
+	    	page.setImage(basic_path+"image2.jpg");
+	    	
+	    });
+	    	
+		
+		
+		
+	    //Scene에 들어갈 것은 SceneMain 클래스 안에 저장해놓을것
+	    stage.setScene(sceneMain.Scenemain);
+	    stage.setTitle("필즈수학원 오답노트 생성기");
 	    stage.show();
 	  }
 
-	public static void saveToFile(Image image) {
-		File outputFile = new File("C:\\JavaFX");
+	public static void saveToFile(Image image, String path, String name) {
+		File outputFile = new File(path+"\\"+name);
+		try{
+			outputFile.createNewFile();
+		}catch(IOException e){
+			System.out.println("file make error");
+			return;
+		}
 		BufferedImage bImage = SwingFXUtils.fromFXImage(image, null);
 		try {
 			ImageIO.write(bImage, "png", outputFile);
