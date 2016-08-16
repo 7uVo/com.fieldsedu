@@ -32,45 +32,37 @@ public class Main extends Application {
 	public void init(){
 		//basic_path 에 기본적인 path로 초기화 할 것
 		basic_path = new String("C:\\Users\\LeeTaeHyun\\Documents");
-		page = new Page(basic_path+"\\image1.jpg");
+		page = new Page(basic_path+"\\backGround.jpg");
 		sceneMain = new SceneMain(page);
 	}
 	@Override
 	public void start(Stage stage) {
 		
 		//다른 path들은 이제 basic_path에 concatenation 할 수 있게 구현할 것
-		String imagePath = "image1.jpg";
+		//String imagePath = "image1.jpg";
 		
 
 	    sceneMain.addButton.setOnAction(e -> {
-	    	//imagePath 를 설정 -> 어디서? combobox의 인자들을 묶을 것 and 모두 체크가 되어있지 않을 경우 Exception 발생시킬 것
-	    	page.setImage(basic_path+"image2.jpg");
-	    	
+	    	String path = new String();
+	    	path = basic_path + "//" + sceneMain.listSchool.getValue() + "//" + sceneMain.listGrade.getValue() + "//" + sceneMain.listSemester.getValue() + "//" + sceneMain.listWorkbook.getValue() + "//" + sceneMain.problemNumber.getText() + ".jpg";
+	    	page.setImage(path, sceneMain);
+	    	sceneMain.problemNumber.clear();
 	    });
-	    	
-		
-		
-		
-	    //Scene에 들어갈 것은 SceneMain 클래스 안에 저장해놓을것
+	    
+	    sceneMain.deleteAllButton.setOnAction(e -> {
+	    	page.setAllNull(sceneMain);
+	    });
+	    
+	    sceneMain.deleteButton.setOnAction(e -> {
+	    	page.setNull(sceneMain);
+	    });
+	    sceneMain.exportButton.setOnAction(e -> {
+	    	Page.saveToFile(page, basic_path, sceneMain.setName.getText());
+	    	sceneMain.setName.clear();
+	    });
+		//Scene에 들어갈 것은 SceneMain 클래스 안에 저장해놓을것
 	    stage.setScene(sceneMain.Scenemain);
 	    stage.setTitle("필즈수학원 오답노트 생성기");
 	    stage.show();
-	  }
-
-	public static void saveToFile(Image image, String path, String name) {
-		File outputFile = new File(path+"\\"+name);
-		try{
-			outputFile.createNewFile();
-		}catch(IOException e){
-			System.out.println("file make error");
-			return;
-		}
-		BufferedImage bImage = SwingFXUtils.fromFXImage(image, null);
-		try {
-			ImageIO.write(bImage, "png", outputFile);
-	    } catch (IOException e) {
-	    	System.out.println("file index not found");
-	    	throw new RuntimeException(e);
-	    }
 	  }
 }

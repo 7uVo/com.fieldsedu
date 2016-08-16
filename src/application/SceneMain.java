@@ -21,7 +21,7 @@ public class SceneMain {
 	ComboBox<String> listWorkbook, listSchool, listSemester, listGrade;
 	Label workbook, school, semester, grade, problem, setname;
 	TextField problemNumber, setName;
-	Button addButton, exportButton;
+	Button addButton, exportButton, deleteButton, deleteAllButton;
 	
 	
 	
@@ -30,10 +30,13 @@ public class SceneMain {
 		VBox left = new VBox();
 		VBox right = new VBox();
 		
-		imageViewMain = new ImageView(page.backGround);
-		
+		imageViewMain = new ImageView(SwingFXUtils.toFXImage(page.outputImage_Buffer,  null));
+		imageViewMain.setFitHeight(877);
+		imageViewMain.setFitWidth(620);
 		//imageViewTemp 는 add 버튼을 눌렀을 때 초기화를 하는 형식으로 해야할 듯 또는 임시 파일을 만들어서 init함수에서 초기화 시켜주는 형식으로 고고
 		imageViewTemp = new ImageView(SwingFXUtils.toFXImage(page.recentImage_Buffer, null));
+		imageViewTemp.setFitHeight(400);
+		imageViewTemp.setFitWidth(300);
 		
 		
 		workbook = new Label("문제집");
@@ -69,6 +72,10 @@ public class SceneMain {
 		
 		addButton = new Button("add");
 		exportButton = new Button("export");
+		deleteButton = new Button("delete");
+		deleteAllButton = new Button("deleteAll");
+		
+		
 		setPath.getChildren().add(addButton);
 		
 		
@@ -78,6 +85,8 @@ public class SceneMain {
 		right.getChildren().add(setname);
 		right.getChildren().add(setName);
 		right.getChildren().add(exportButton);
+		right.getChildren().add(deleteButton);
+		right.getChildren().add(deleteAllButton);
 		
 		root.getChildren().add(left);
 		root.getChildren().add(right);
