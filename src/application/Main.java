@@ -60,6 +60,9 @@ public class Main extends Application {
 	    	Page.saveToFile(page, basic_path, sceneMain.setName.getText());
 	    	sceneMain.setName.clear();
 	    });
+	    
+	    
+	    
 		//Scene에 들어갈 것은 SceneMain 클래스 안에 저장해놓을것
 	    stage.setScene(sceneMain.Scenemain);
 	    stage.setTitle("필즈수학원 오답노트 생성기");

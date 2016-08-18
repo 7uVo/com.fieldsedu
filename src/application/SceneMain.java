@@ -1,6 +1,6 @@
 package application;
 
-import java.awt.Insets;
+import javafx.geometry.Insets;
 
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -11,11 +11,12 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 import javafx.scene.control.*;
 
 public class SceneMain {
 	public Scene Scenemain;
-	HBox root, setPath;
+	HBox root, setPath, ButtonBox;
 	VBox left, right;
 	ImageView imageViewMain, imageViewTemp;
 	ComboBox<String> listWorkbook, listSchool, listSemester, listGrade;
@@ -29,7 +30,7 @@ public class SceneMain {
 		HBox root = new HBox();
 		VBox left = new VBox();
 		VBox right = new VBox();
-		
+		HBox buttonBox = new HBox();
 		imageViewMain = new ImageView(SwingFXUtils.toFXImage(page.outputImage_Buffer,  null));
 		imageViewMain.setFitHeight(877);
 		imageViewMain.setFitWidth(620);
@@ -39,12 +40,27 @@ public class SceneMain {
 		imageViewTemp.setFitWidth(300);
 		
 		
-		workbook = new Label("문제집");
-		school = new Label("학교");
-		semester = new Label("학기");
-		grade = new Label("학년");
-		problem = new Label("문제번호");
+	
 		
+		
+		
+		
+		workbook = new Label("문제집 :");
+		workbook.setFont(new Font(15));
+		school = new Label("학교 :");
+		school.setFont(new Font(15));
+		semester = new Label("학기 :");
+		semester.setFont(new Font(15));
+		grade = new Label("학년 :");
+		grade.setFont(new Font(15));
+		problem = new Label("문제번호 :");
+		problem.setFont(new Font(15));
+		
+		addButton = new Button("add");
+		exportButton = new Button("export");
+		deleteButton = new Button("delete");
+		deleteAllButton = new Button("deleteAll");
+
 		listWorkbook = new ComboBox<String>();
 		listSchool = new ComboBox<String>();
 		listSemester = new ComboBox<String>();
@@ -58,6 +74,7 @@ public class SceneMain {
 		problemNumber = new TextField();
 		setName = new TextField();
 		setname = new Label("이름 설정");
+		setname.setFont(new Font(15));
 		setPath = new HBox();
 		setPath.getChildren().add(school);
 		setPath.getChildren().add(listSchool);
@@ -69,28 +86,29 @@ public class SceneMain {
 		setPath.getChildren().add(listWorkbook);
 		setPath.getChildren().add(problem);
 		setPath.getChildren().add(problemNumber);
-		
-		addButton = new Button("add");
-		exportButton = new Button("export");
-		deleteButton = new Button("delete");
-		deleteAllButton = new Button("deleteAll");
-		
-		
 		setPath.getChildren().add(addButton);
 		
+		setPath.setPadding(new Insets(50, 30, 30, 20));
+		setPath.setSpacing(20);
+		left.setPadding(new Insets(30,30,30,30));
 		
 		left.getChildren().add(imageViewMain);
 		right.getChildren().add(setPath);
 		right.getChildren().add(imageViewTemp);
 		right.getChildren().add(setname);
 		right.getChildren().add(setName);
-		right.getChildren().add(exportButton);
-		right.getChildren().add(deleteButton);
-		right.getChildren().add(deleteAllButton);
-		
 		root.getChildren().add(left);
 		root.getChildren().add(right);
+		right.getChildren().add(buttonBox);
+		right.setPadding(new Insets(50,50,50,50)); 
+		right.setSpacing(20);
 		
+		
+		buttonBox.getChildren().add(deleteButton);
+		buttonBox.getChildren().add(deleteAllButton);
+		buttonBox.getChildren().add(exportButton);
+		buttonBox.setPadding(new Insets(30, 30, 30, 20));
+		buttonBox.setSpacing(20);
 		Scenemain = new Scene(root);
 		
 	}
