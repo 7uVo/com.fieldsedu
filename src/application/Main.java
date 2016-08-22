@@ -1,69 +1,157 @@
 package application;
 
 
-import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
-
-import javax.imageio.ImageIO;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
-import javafx.geometry.Pos;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.VBox;
-import javafx.scene.layout.HBox;
+import javafx.event.EventHandler;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+//import javafx.application.Platform;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 
 public class Main extends Application {
-	Page page;
+	Page[] page;
 	String basic_path;
 	SceneMain sceneMain;
+	int page_index, page_maxIndex;
+	String pathInfo = new String("/resources/pathInfo.txt");
+	
 	public static void main(String[] args) {
 	    Application.launch(args);
 	  }
 	@Override
 	public void init(){
-		//basic_path 에 기본적인 path로 초기화 할 것
-		basic_path = new String("C:\\Users\\LeeTaeHyun\\Documents");
-		page = new Page(basic_path+"\\backGround.jpg");
-		sceneMain = new SceneMain(page);
+		page = new Page[1000];
+		page_index = 0;
+		page_maxIndex = 0;
 	}
+	public void init_setFile_Dir(){
+		try{
+			page[page_index] = new Page();
+		}catch(IOException i){System.out.println("file io error");}
+		
+		
+		sceneMain = new SceneMain();			
+		DirectoryChooser directoryChooser = new DirectoryChooser();
+		directoryChooser.setTitle("기본 경로 설정");;
+		File selectedFile = directoryChooser.showDialog(new Stage());
+		
+		basic_path = selectedFile.getPath();
+
+		
+	}
+//	boolean isSetPath(){
+//		 InputStream is = getClass().getResourceAsStream(pathInfo);
+//		 InputStreamReader isr = new InputStreamReader(is);
+//		 BufferedReader br = new BufferedReader(isr);
+//		 try {
+//			if((basic_path = br.readLine()) == null) return false;
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//		 return true;
+//	}
+//	
+//	void setPath(String path){
+//		System.out.println("SetPath");
+//		
+////		PrintWriter writer=null;
+////		try {
+////			writer = new PrintWriter(new File(this.getClass().getResource(pathInfo).getPath()));
+////		} catch (FileNotFoundException e1) {
+////			// TODO Auto-generated catch block
+////			System.out.println("File not found");
+////			e1.printStackTrace();
+////		}
+//		
+//		BufferedWriter writer = null;
+//		try{
+//			//File pathInfoFile = new File(this.getClass().getResource(pathInfo));
+//			writer = new BufferedWriter(new FileWriter(this.getClass().getResource(pathInfo)));
+//			writer.write(path);
+//		}catch(Exception e){}
+//		 finally{
+//			try{
+//				writer.close();
+//			}catch(Exception e){}
+//		}
+//		System.out.println("SetPath end");
+//		
+//	}
+	
+	
+	void addButtonFunction(){
+		String path = new String();
+    	String temp = new String("\\");
+    	path = basic_path + temp + sceneMain.listSchool.getValue() + temp + sceneMain.listGrade.getValue() + temp + sceneMain.listSemester.getValue() + temp + sceneMain.listWorkbook.getValue() + temp + sceneMain.problemNumber.getText() + ".jpg";
+    	page[page_index].setImage(path, sceneMain);
+    	sceneMain.problemNumber.clear();
+	}
+	
 	@Override
 	public void start(Stage stage) {
-		
-		//다른 path들은 이제 basic_path에 concatenation 할 수 있게 구현할 것
-		//String imagePath = "image1.jpg";
-		
-
-	    sceneMain.addButton.setOnAction(e -> {
-	    	String path = new String();
-	    	path = basic_path + "//" + sceneMain.listSchool.getValue() + "//" + sceneMain.listGrade.getValue() + "//" + sceneMain.listSemester.getValue() + "//" + sceneMain.listWorkbook.getValue() + "//" + sceneMain.problemNumber.getText() + ".jpg";
-	    	page.setImage(path, sceneMain);
-	    	sceneMain.problemNumber.clear();
+		init_setFile_Dir();
+		sceneMain.addButton.setOnAction(e -> {
+	    	addButtonFunction();
 	    });
 	    
 	    sceneMain.deleteAllButton.setOnAction(e -> {
-	    	page.setAllNull(sceneMain);
+	    	page[page_index].setAllNull(sceneMain);
 	    });
 	    
 	    sceneMain.deleteButton.setOnAction(e -> {
-	    	page.setNull(sceneMain);
+	    	page[page_index].setNull(sceneMain);
 	    });
 	    sceneMain.exportButton.setOnAction(e -> {
-	    	Page.saveToFile(page, basic_path, sceneMain.setName.getText());
+	    	//Page.saveToFile(page[page_index], basic_path, sceneMain.setName.getText());
+	    	PDF.toPDF(page, page_maxIndex, basic_path, sceneMain.setName.getText());
 	    	sceneMain.setName.clear();
+	    });
+	    sceneMain.nextPageButton.setOnAction(e -> {
+	    	page_index++;
+	    	if(page_index >= 100) page_index = 99;
+	    	page_maxIndex = Math.max(page_maxIndex, page_index);
+	    	sceneMain.maxPage.setText(String.valueOf(page_maxIndex+1));
+	    	sceneMain.nowPage.setText(String.valueOf(page_index+1));
+	    	if(page[page_index] == null) {
+	    		try{
+	    			page[page_index] = new Page();
+	    		}catch(IOException ioe){
+	    			System.out.println("IOException at create new page object");
+	    		}
+	    	}
+	    	sceneMain.imageViewMain.setImage(SwingFXUtils.toFXImage(page[page_index].outputImage_Buffer, null));
+	    	sceneMain.imageViewTemp.setImage(SwingFXUtils.toFXImage(page[page_index].outputImage_Buffer, null));
+	    });
+	    sceneMain.previousPageButton.setOnAction(e -> {
+	    	page_index--;
+	    	if(page_index < 0) page_index = 0;
+	    	sceneMain.nowPage.setText(String.valueOf(page_index+1));
+	    	sceneMain.imageViewMain.setImage(SwingFXUtils.toFXImage(page[page_index].outputImage_Buffer, null));
+	    	sceneMain.imageViewTemp.setImage(SwingFXUtils.toFXImage(page[page_index].outputImage_Buffer, null));
+	    });
+	    sceneMain.problemNumber.setOnKeyPressed(new EventHandler<KeyEvent>(){
+	    	@Override
+	    	public void handle(KeyEvent keyEvent){
+	    		if(keyEvent.getCode() == KeyCode.ENTER){
+	    			addButtonFunction();
+	    		}
+	    	}
 	    });
 	    
 	    
-	    
-		//Scene에 들어갈 것은 SceneMain 클래스 안에 저장해놓을것
 	    stage.setScene(sceneMain.Scenemain);
 	    stage.setTitle("필즈수학원 오답노트 생성기");
 	    stage.show();
