@@ -25,6 +25,9 @@ public class SceneMain {
 	Button addButton, exportButton, deleteButton, deleteAllButton;
 	Button nextPageButton, previousPageButton;
 	MenuBar menuBar;
+	RadioButton radioButtonSchool;
+	
+	
 	
 	SceneMain(){
 		root = new HBox();

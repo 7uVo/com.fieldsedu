@@ -48,10 +48,10 @@ public class Main extends Application {
 		directoryChooser.setTitle("기본 경로 설정");;
 		File selectedFile = directoryChooser.showDialog(new Stage());
 		
-		basic_path = selectedFile.getPath();
-
-		
+		basic_path = selectedFile.getPath();	
 	}
+	
+	
 //	boolean isSetPath(){
 //		 InputStream is = getClass().getResourceAsStream(pathInfo);
 //		 InputStreamReader isr = new InputStreamReader(is);
@@ -92,13 +92,37 @@ public class Main extends Application {
 //	}
 	
 	
+	
+	void nextPageButtonFunction(){
+		page_index++;
+    	if(page_index >= 100) page_index = 99;
+    	page_maxIndex = Math.max(page_maxIndex, page_index);
+    	sceneMain.maxPage.setText(String.valueOf(page_maxIndex+1));
+    	sceneMain.nowPage.setText(String.valueOf(page_index+1));
+    	if(page[page_index] == null) {
+    		try{
+    			page[page_index] = new Page();
+    		}catch(IOException ioe){
+    			System.out.println("IOException at create new page object");
+    		}
+    	}
+    	sceneMain.imageViewMain.setImage(SwingFXUtils.toFXImage(page[page_index].outputImage_Buffer, null));
+    	sceneMain.imageViewTemp.setImage(SwingFXUtils.toFXImage(Page.recentImage_Buffer, null));
+	}
+	
+	
 	void addButtonFunction(){
 		String path = new String();
     	String temp = new String("\\");
     	path = basic_path + temp + sceneMain.listSchool.getValue() + temp + sceneMain.listGrade.getValue() + temp + sceneMain.listSemester.getValue() + temp + sceneMain.listWorkbook.getValue() + temp + sceneMain.problemNumber.getText() + ".jpg";
-    	page[page_index].setImage(path, sceneMain);
+    	if(page[page_index].setImage(path, sceneMain) == false){
+    		nextPageButtonFunction();
+    		page[page_index].setImageByFalse(sceneMain);
+    	}
     	sceneMain.problemNumber.clear();
 	}
+	
+	
 	
 	@Override
 	public void start(Stage stage) {
@@ -120,20 +144,7 @@ public class Main extends Application {
 	    	sceneMain.setName.clear();
 	    });
 	    sceneMain.nextPageButton.setOnAction(e -> {
-	    	page_index++;
-	    	if(page_index >= 100) page_index = 99;
-	    	page_maxIndex = Math.max(page_maxIndex, page_index);
-	    	sceneMain.maxPage.setText(String.valueOf(page_maxIndex+1));
-	    	sceneMain.nowPage.setText(String.valueOf(page_index+1));
-	    	if(page[page_index] == null) {
-	    		try{
-	    			page[page_index] = new Page();
-	    		}catch(IOException ioe){
-	    			System.out.println("IOException at create new page object");
-	    		}
-	    	}
-	    	sceneMain.imageViewMain.setImage(SwingFXUtils.toFXImage(page[page_index].outputImage_Buffer, null));
-	    	sceneMain.imageViewTemp.setImage(SwingFXUtils.toFXImage(page[page_index].outputImage_Buffer, null));
+	    	nextPageButtonFunction();
 	    });
 	    sceneMain.previousPageButton.setOnAction(e -> {
 	    	page_index--;
@@ -142,6 +153,8 @@ public class Main extends Application {
 	    	sceneMain.imageViewMain.setImage(SwingFXUtils.toFXImage(page[page_index].outputImage_Buffer, null));
 	    	sceneMain.imageViewTemp.setImage(SwingFXUtils.toFXImage(page[page_index].outputImage_Buffer, null));
 	    });
+	    //sceneMain.listSchool.property
+	    
 	    sceneMain.problemNumber.setOnKeyPressed(new EventHandler<KeyEvent>(){
 	    	@Override
 	    	public void handle(KeyEvent keyEvent){
@@ -153,6 +166,7 @@ public class Main extends Application {
 	    
 	    
 	    stage.setScene(sceneMain.Scenemain);
+	    System.out.println("setScene");
 	    stage.setTitle("필즈수학원 오답노트 생성기");
 	    stage.show();
 	  }

@@ -19,15 +19,18 @@ public class Page {
 	static Image backGround;
 	static BufferedImage backGround_Buffer;
 	static BufferedImage checkBoxImage_Buffer;
+	static BufferedImage recentImage_Buffer;
 	
 	Image[] image;
 	BufferedImage[] image_Buffer;
 	BufferedImage outputImage_Buffer;
 	Image outputImage;
-	BufferedImage recentImage_Buffer;
-	boolean isSetBasicImage = false;
+	boolean isFullPage = false, isLeftFull = false;
 	static int posx, posy = 350;
-	static int problemSize = 650;
+	static final int problemSize = 650;
+	int temp;
+	int x = posx, y[] = {posy, 150};
+	int checkSpace = 140;
 	
 	Page() throws IOException{
 		//setBackGroundImage(path);
@@ -39,24 +42,25 @@ public class Page {
 				System.out.println("file open error");
 			}			
 			backGround = SwingFXUtils.toFXImage(backGround_Buffer, null);
-			checkBoxImage_Buffer = Page.scale(checkBoxImage_Buffer, 202, 42, (double)42/checkBoxImage_Buffer.getHeight());
+			checkBoxImage_Buffer = Page.scale(checkBoxImage_Buffer, 258, 60, (double)258/checkBoxImage_Buffer.getWidth());
 		}
 		//set recentImage_Buffer to temp_image(search next time);
 		posx = (int)Page.backGround.getWidth()/14;
-		recentImage_Buffer = deepCopy_BufferedImage(backGround_Buffer);
+		if(recentImage_Buffer == null) {
+			recentImage_Buffer = deepCopy_BufferedImage(backGround_Buffer);
+			double scale = problemSize/(double)recentImage_Buffer.getWidth();
+			recentImage_Buffer = Page.scale(recentImage_Buffer, problemSize, (int)(recentImage_Buffer.getHeight() * scale), scale);
+		}
 		outputImage_Buffer = deepCopy_BufferedImage(backGround_Buffer);
 		System.out.println("Height is : " + backGround.getHeight() + "Width is : " + backGround.getWidth());
 		image = new Image[40];
 		image_Buffer = new BufferedImage[40];
+		isFullPage = isLeftFull = false;
 	}
-	
-	
-	
 	
 	void setoutputImage_fromBuffer(){
 		this.outputImage = SwingFXUtils.toFXImage(outputImage_Buffer, null);
 	}
-	
 	
 	void setBackGroundImage(String path){
 		try{
@@ -88,32 +92,56 @@ public class Page {
 	 * set BufferedImage object and Image object by their index not initialized null;
 	 * so initialize them to ImageIO to path
 	 * */
-	void setImage(String path, SceneMain sceneMain){
+	boolean setImage(String path, SceneMain sceneMain){
 		int index;
 		for(index = 0; index < 40; index++) if(image[index]==null) break;
 		System.out.println("setImage index = " + index);
-		if(index == 40){
-			System.out.println("image array is full");
-			return;
-		}
+		
 		try{
 			recentImage_Buffer = ImageIO.read(new File(path));
 			double scale = problemSize/(double)recentImage_Buffer.getWidth();
 			recentImage_Buffer = Page.scale(recentImage_Buffer, problemSize, (int)(recentImage_Buffer.getHeight() * scale), scale);
+			if(index == 40 || isFullPage == true || y[1] + Page.recentImage_Buffer.getHeight() + Page.checkBoxImage_Buffer.getHeight() + 10 + checkSpace > Page.backGround.getHeight()){
+				return false;
+			}
 			image_Buffer[index] = deepCopy_BufferedImage(recentImage_Buffer);
 		}catch(IOException i){
 			System.out.println("image_Buffer open Error! index is : " + index);
 			System.out.println("path is : " + path);
-			return;
+			return true;
 		}
 		image[index] = SwingFXUtils.toFXImage(image_Buffer[index], null);
 		sceneMain.imageViewTemp.setImage(SwingFXUtils.toFXImage(recentImage_Buffer,  null));
 		
-		overlayImage(this, sceneMain);
+		overlayImage(sceneMain);
 		sceneMain.imageViewMain.setImage(SwingFXUtils.toFXImage(outputImage_Buffer,  null));
+		return true;
 	}
 	
-	
+	boolean setImageByFalse(SceneMain sceneMain){
+		int index;
+		for(index = 0; index < 40; index++) if(image[index]==null) break;
+		System.out.println("setImagebyFalse index = " + index);
+		if(index == 40){
+			System.out.println("image array is full");
+			return false;
+		}
+		if(y[1] + Page.recentImage_Buffer.getHeight() + Page.checkBoxImage_Buffer.getHeight() + 10 + checkSpace > Page.backGround.getHeight()){
+			System.out.println("setImageByFalse return false");
+			System.out.println(y[1]);
+			System.out.println(Page.recentImage_Buffer.getHeight());
+			System.out.println(Page.checkBoxImage_Buffer.getHeight());
+			
+			return false;
+		}
+		image_Buffer[index] = deepCopy_BufferedImage(recentImage_Buffer);
+		image[index] = SwingFXUtils.toFXImage(image_Buffer[index], null);
+		sceneMain.imageViewTemp.setImage(SwingFXUtils.toFXImage(recentImage_Buffer,  null));
+		
+		overlayImage(sceneMain);
+		sceneMain.imageViewMain.setImage(SwingFXUtils.toFXImage(outputImage_Buffer,  null));
+		return true;
+	}
 	
 	void setAllNull(SceneMain sceneMain){
 		for(int i=0;i<40;i++){
@@ -122,16 +150,14 @@ public class Page {
 		}
 		System.out.println("setAllNull");
 		outputImage_Buffer = deepCopy_BufferedImage(backGround_Buffer);
-		overlayImage(this, sceneMain);
+		overlayImageAll(sceneMain);
 		sceneMain.imageViewMain.setImage(SwingFXUtils.toFXImage(outputImage_Buffer,  null));
 	}
 	/*set Null like stack
 	 * and after set to null call overlay func, it is overlay first to end
 	 * 
 	 * */
-	
-	
-	
+
 	void setNull(SceneMain sceneMain){
 		int index;
 		for(index = 39; index>=0; index--){
@@ -145,46 +171,85 @@ public class Page {
 		image[index]=null;
 		image_Buffer[index]=null;
 		outputImage_Buffer = deepCopy_BufferedImage(backGround_Buffer);
-		overlayImage(this, sceneMain);
+		overlayImageAll(sceneMain);
 		
 		sceneMain.imageViewMain.setImage(SwingFXUtils.toFXImage(outputImage_Buffer,  null));
 	}
-	
-	
-	
 	/*
 	 * overlayImage is a function which get graphics of each BufferedImage object and draw to outputImage_Buffer 
 	 * clear to backGround Image and overlay one by one
 	 * */
-	static void overlayImage(Page page, SceneMain sceneMain){
-		System.out.println("Width is : "+page.outputImage_Buffer.getWidth()+"Height is : " + page.outputImage_Buffer.getHeight());
-		Graphics g = page.outputImage_Buffer.getGraphics();
+	void overlayImage(SceneMain sceneMain){
+		System.out.println("Width is : "+this.outputImage_Buffer.getWidth()+"Height is : " + this.outputImage_Buffer.getHeight());
+		Graphics g = this.outputImage_Buffer.getGraphics();
 		
-		int x = posx, y[] = {posy, 150}, index = 0;
-		int temp = Page.checkBoxImage_Buffer.getHeight() + 10;
+		int index = 0;
+		for(;this.image_Buffer[index]==null;index++);
+		
+		
+		temp = Page.checkBoxImage_Buffer.getHeight() + 10;
+		if(isLeftFull == false && y[0] + recentImage_Buffer.getHeight() + temp + checkSpace < Page.backGround.getHeight()){
+			g.drawImage(Page.checkBoxImage_Buffer, posx, y[0], null);
+			y[0]+=temp;
+			g.drawImage(recentImage_Buffer, posx, y[0], null);
+			y[0]+=recentImage_Buffer.getHeight()+30;
+		}
+		else{
+			isLeftFull = true;
+			x = posx + (int)Page.backGround.getWidth()/2;
+			if(y[1] + recentImage_Buffer.getHeight() + temp + checkSpace > Page.backGround.getHeight()){
+				this.isFullPage = true;
+				return ;
+			}
+			g.drawImage(Page.checkBoxImage_Buffer, x, y[1], null);
+			y[1]+=temp;
+			g.drawImage(recentImage_Buffer, x, y[1], null);
+			y[1]+=recentImage_Buffer.getHeight()+30;
+		}
+		
+		
+	}
+	void overlayImageAll(SceneMain sceneMain){
+		System.out.println("Width is : "+this.outputImage_Buffer.getWidth()+"Height is : " + this.outputImage_Buffer.getHeight());
+		Graphics g = this.outputImage_Buffer.getGraphics();
+		
+		int index = 0;
+		for(;index < 40 && this.image_Buffer[index]==null;index++);
+		//if(index == 40) return;
+		this.isFullPage = false;
+		this.isLeftFull = false;
+		temp = Page.checkBoxImage_Buffer.getHeight() + 10;
+		x = posx;
+		y[0] = posy;
+		y[1] = 150;
+		
 		for(int i = 0; i < 40; i++){
-			if(page.image[i]!=null){
-				if(index == 0 && y[0] + page.image_Buffer[i].getHeight() + temp < Page.backGround.getHeight()){
+			if(this.image[i]!=null){
+				if(index == 0 && y[0] + this.image_Buffer[i].getHeight() + temp + checkSpace < Page.backGround.getHeight()){
 					g.drawImage(Page.checkBoxImage_Buffer, x, y[0], null);
 					y[0]+=temp;
-					g.drawImage(page.image_Buffer[i], x, y[0], null);
-					y[0] += page.image_Buffer[i].getHeight() + 30;
+					g.drawImage(this.image_Buffer[i], x, y[0], null);
+					y[0] += this.image_Buffer[i].getHeight() + 30;
 				}
 				else{
 					index=1;
+					this.isLeftFull = true;
 					x = posx+(int)Page.backGround.getWidth()/2;
-					if(y[1] + page.image_Buffer[i].getHeight() + temp > Page.backGround.getHeight()) return;
+					if(y[1] + this.image_Buffer[i].getHeight() + temp + checkSpace > Page.backGround.getHeight()){
+						this.isFullPage = true;
+						return;
+					}
 					g.drawImage(Page.checkBoxImage_Buffer, x, y[1], null);
 					y[1]+=temp;
-					g.drawImage(page.image_Buffer[i],  x,  y[1],  null);
-					y[1] += page.image_Buffer[i].getHeight() + 30;
+					g.drawImage(this.image_Buffer[i],  x,  y[1],  null);
+					y[1] += this.image_Buffer[i].getHeight() + 30;
 				}
+				
 			}
 		}
 		
 		
 	}
-	
 	/*
 	 * export page.outputImage_Buffer to path(basic path) + name(set filename); 
 	 * */
