@@ -30,7 +30,7 @@ public class PDF {
 	
 	//왜 for문에서 page_maxIndex 와 같게 해야하는 지는 잘 모르겠음 
 	public static void toPDF(Page[] page, int page_maxIndex, String path, String fileName){
-		File outputFile = new File(path + "//" + fileName + ".pdf");
+		File outputFile = new File(/*path + "//" +*/ fileName + ".pdf");
 		//FileOutputStream pdfFileout = null;
 		try{
 			outputFile.createNewFile();
@@ -51,9 +51,9 @@ public class PDF {
 		
 		for(int i = 0; i <= page_maxIndex; i++){
 			PdfCanvas canvas = new PdfCanvas(pdfDoc.addNewPage());
-			Page.saveToFile(page[i], path, "temp");
+			Page.saveToFile(page[i], "", "temp");
 			try {
-				canvas.addImage(ImageDataFactory.create(path+"\\"+"temp.jpg"), pageSize, false);
+				canvas.addImage(ImageDataFactory.create("temp.jpg"), pageSize, false);
 			} catch (MalformedURLException e) {
 				e.printStackTrace();
 			}

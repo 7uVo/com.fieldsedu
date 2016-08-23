@@ -13,8 +13,11 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.EventHandler;
+import javafx.scene.control.Toggle;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 //import javafx.application.Platform;
@@ -40,15 +43,13 @@ public class Main extends Application {
 	public void init_setFile_Dir(){
 		try{
 			page[page_index] = new Page();
-		}catch(IOException i){System.out.println("file io error");}
-		
-		
+		}catch(IOException i){System.out.println("file io error");}		
 		sceneMain = new SceneMain();			
-		DirectoryChooser directoryChooser = new DirectoryChooser();
-		directoryChooser.setTitle("기본 경로 설정");;
-		File selectedFile = directoryChooser.showDialog(new Stage());
-		
-		basic_path = selectedFile.getPath();	
+//		DirectoryChooser directoryChooser = new DirectoryChooser();
+//		directoryChooser.setTitle("기본 경로 설정");;
+//		File selectedFile = directoryChooser.showDialog(new Stage());
+//		
+//		basic_path = selectedFile.getPath();	
 	}
 	
 	
@@ -114,7 +115,12 @@ public class Main extends Application {
 	void addButtonFunction(){
 		String path = new String();
     	String temp = new String("\\");
-    	path = basic_path + temp + sceneMain.listSchool.getValue() + temp + sceneMain.listGrade.getValue() + temp + sceneMain.listSemester.getValue() + temp + sceneMain.listWorkbook.getValue() + temp + sceneMain.problemNumber.getText() + ".jpg";
+    	if(sceneMain.middleSchoolRadioButton.isSelected()){
+    		path = /*basic_path + temp +*/ sceneMain.middleSchoolRadioButton.getUserData() + temp + sceneMain.listGrade.getValue() + temp + sceneMain.listSemester.getValue() + temp + sceneMain.listMiddleSchoolWorkbook.getValue() + temp + sceneMain.problemNumber.getText() + ".jpg";    		
+    	}
+    	else if(sceneMain.highSchoolRadioButton.isSelected()){
+    		path = /*basic_path + temp +*/ sceneMain.highSchoolRadioButton.getUserData() + temp + sceneMain.listHighSchoolSubject.getValue() + temp + sceneMain.listHighSchoolWorkbook.getValue() + temp + sceneMain.problemNumber.getText() + ".jpg";
+    	}
     	if(page[page_index].setImage(path, sceneMain) == false){
     		nextPageButtonFunction();
     		page[page_index].setImageByFalse(sceneMain);
@@ -140,7 +146,7 @@ public class Main extends Application {
 	    });
 	    sceneMain.exportButton.setOnAction(e -> {
 	    	//Page.saveToFile(page[page_index], basic_path, sceneMain.setName.getText());
-	    	PDF.toPDF(page, page_maxIndex, basic_path, sceneMain.setName.getText());
+	    	PDF.toPDF(page, page_maxIndex, "", sceneMain.setName.getText());
 	    	sceneMain.setName.clear();
 	    });
 	    sceneMain.nextPageButton.setOnAction(e -> {
@@ -160,8 +166,23 @@ public class Main extends Application {
 	    	public void handle(KeyEvent keyEvent){
 	    		if(keyEvent.getCode() == KeyCode.ENTER){
 	    			addButtonFunction();
+	    			sceneMain.problemNumber.clear();
 	    		}
 	    	}
+	    });
+	    sceneMain.schoolGroup.selectedToggleProperty().addListener(new ChangeListener<Toggle>(){
+	    	@Override
+			public void changed(ObservableValue<? extends Toggle> observable, Toggle oldValue, Toggle newValue) {
+				if(sceneMain.middleSchoolRadioButton.isSelected()) {
+					sceneMain.setPath.getChildren().add(1, sceneMain.setPathMiddleSchool);
+					sceneMain.setPath.getChildren().remove(2);
+				}
+				//sceneMain.setPathMiddleSchool;
+				if(sceneMain.highSchoolRadioButton.isSelected()) {
+					sceneMain.setPath.getChildren().add(1, sceneMain.setPathHighSchool);
+					sceneMain.setPath.getChildren().remove(2);
+				}
+			}
 	    });
 	    
 	    
