@@ -17,20 +17,26 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.EventHandler;
+import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.control.Toggle;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 //import javafx.application.Platform;
 import javafx.stage.DirectoryChooser;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 public class Main extends Application {
 	Page[] page;
 	String basic_path;
 	SceneMain sceneMain;
+	boolean isDEBUG = false, isLeeTaeHyun = true;
 	int page_index, page_maxIndex;
-	String pathInfo = new String("/resources/pathInfo.txt");
-	
+	File jarPath;
 	public static void main(String[] args) {
 	    Application.launch(args);
 	  }
@@ -43,58 +49,59 @@ public class Main extends Application {
 	public void init_setFile_Dir(){
 		try{
 			page[page_index] = new Page();
-		}catch(IOException i){System.out.println("file io error");}		
-		sceneMain = new SceneMain();			
-//		DirectoryChooser directoryChooser = new DirectoryChooser();
-//		directoryChooser.setTitle("±‚∫ª ∞Ê∑Œ º≥¡§");;
-//		File selectedFile = directoryChooser.showDialog(new Stage());
-//		
-//		basic_path = selectedFile.getPath();	
+		}catch(IOException i){
+			if(isDEBUG){
+				Stage dialog = new Stage(StageStyle.UTILITY);
+				dialog.initModality(Modality.WINDOW_MODAL);
+				dialog.initOwner(sceneMain.Scenemain.getWindow());
+				dialog.setTitle("ERROR");
+				dialog.setScene(new Scene(new VBox(new Label("Page class init error"))));
+				dialog.setResizable(false);;
+				dialog.show();	
+			}
+			
+			System.out.println("file io error");
+		}
+		if(isLeeTaeHyun){
+			jarPath = new File(Main.class.getProtectionDomain().getCodeSource().getLocation().getPath()).getParentFile();
+			//jarPath.getParentFile().getAbsolutePath();
+			DirectoryChooser directoryChooser = new DirectoryChooser();
+			directoryChooser.setTitle("Í∏∞Î≥∏ Í≤ΩÎ°ú ÏÑ†ÌÉù");;
+			File selectedFile = directoryChooser.showDialog(new Stage());
+			basic_path = selectedFile.getPath();	
+			
+		}
+		else{
+			basic_path = new String("G:\\0.ÔøΩ–øÔøΩÔøΩÔøΩÔøΩÔøΩ\\ÔøΩ–øÔøΩÔøΩÔøΩ»π\\ÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩ\\ÔøΩ–ªÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩŒ±◊∑ÔøΩÔøΩÔøΩÔøΩÔøΩ\\com.fieldsedu");
+		}
+		sceneMain = new SceneMain();	
+		//basic_path = new File("").getAbsolutePath();
+		
 	}
 	
-	
-//	boolean isSetPath(){
-//		 InputStream is = getClass().getResourceAsStream(pathInfo);
-//		 InputStreamReader isr = new InputStreamReader(is);
-//		 BufferedReader br = new BufferedReader(isr);
-//		 try {
-//			if((basic_path = br.readLine()) == null) return false;
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-//		 return true;
-//	}
-//	
-//	void setPath(String path){
-//		System.out.println("SetPath");
-//		
-////		PrintWriter writer=null;
-////		try {
-////			writer = new PrintWriter(new File(this.getClass().getResource(pathInfo).getPath()));
-////		} catch (FileNotFoundException e1) {
-////			// TODO Auto-generated catch block
-////			System.out.println("File not found");
-////			e1.printStackTrace();
-////		}
-//		
-//		BufferedWriter writer = null;
-//		try{
-//			//File pathInfoFile = new File(this.getClass().getResource(pathInfo));
-//			writer = new BufferedWriter(new FileWriter(this.getClass().getResource(pathInfo)));
-//			writer.write(path);
-//		}catch(Exception e){}
-//		 finally{
-//			try{
-//				writer.close();
-//			}catch(Exception e){}
-//		}
-//		System.out.println("SetPath end");
-//		
-//	}
-	
-	
-	
-	void nextPageButtonFunction(){
+	private void addButtonFunction(){
+		String path = new String();
+    	String temp = "\\";
+    	if(sceneMain.middleSchoolRadioButton.isSelected()){
+    		path = basic_path + temp + sceneMain.middleSchoolRadioButton.getUserData() + temp + sceneMain.listGrade.getValue() + temp + sceneMain.listSemester.getValue() + temp + sceneMain.listMiddleSchoolWorkbook.getValue() + temp + sceneMain.problemNumber.getText() + ".jpg";    		
+    	}
+    	else if(sceneMain.highSchoolRadioButton.isSelected()){
+    		path = basic_path + temp + sceneMain.highSchoolRadioButton.getUserData() + temp + sceneMain.listHighSchoolSubject.getValue() + temp + sceneMain.listHighSchoolWorkbook.getValue() + temp + sceneMain.problemNumber.getText() + ".jpg";
+    	}
+    	if(!page[page_index].setImage(path, sceneMain)){
+    		nextPageButtonFunction();
+    		page[page_index].setImageByFalse(sceneMain);
+    	}
+    	
+	}
+	private void previousPageButtonFunction(){
+		page_index--;
+    	if(page_index < 0) page_index = 0;
+    	sceneMain.nowPage.setText(String.valueOf(page_index+1));
+    	sceneMain.imageViewMain.setImage(SwingFXUtils.toFXImage(page[page_index].outputImage_Buffer, null));
+    	sceneMain.imageViewTemp.setImage(SwingFXUtils.toFXImage(page[page_index].outputImage_Buffer, null));
+	}
+	private void nextPageButtonFunction(){
 		page_index++;
     	if(page_index >= 100) page_index = 99;
     	page_maxIndex = Math.max(page_maxIndex, page_index);
@@ -110,26 +117,6 @@ public class Main extends Application {
     	sceneMain.imageViewMain.setImage(SwingFXUtils.toFXImage(page[page_index].outputImage_Buffer, null));
     	sceneMain.imageViewTemp.setImage(SwingFXUtils.toFXImage(Page.recentImage_Buffer, null));
 	}
-	
-	
-	void addButtonFunction(){
-		String path = new String();
-    	String temp = new String("\\");
-    	if(sceneMain.middleSchoolRadioButton.isSelected()){
-    		path = /*basic_path + temp +*/ sceneMain.middleSchoolRadioButton.getUserData() + temp + sceneMain.listGrade.getValue() + temp + sceneMain.listSemester.getValue() + temp + sceneMain.listMiddleSchoolWorkbook.getValue() + temp + sceneMain.problemNumber.getText() + ".jpg";    		
-    	}
-    	else if(sceneMain.highSchoolRadioButton.isSelected()){
-    		path = /*basic_path + temp +*/ sceneMain.highSchoolRadioButton.getUserData() + temp + sceneMain.listHighSchoolSubject.getValue() + temp + sceneMain.listHighSchoolWorkbook.getValue() + temp + sceneMain.problemNumber.getText() + ".jpg";
-    	}
-    	if(page[page_index].setImage(path, sceneMain) == false){
-    		nextPageButtonFunction();
-    		page[page_index].setImageByFalse(sceneMain);
-    	}
-    	sceneMain.problemNumber.clear();
-	}
-	
-	
-	
 	@Override
 	public void start(Stage stage) {
 		init_setFile_Dir();
@@ -146,20 +133,47 @@ public class Main extends Application {
 	    });
 	    sceneMain.exportButton.setOnAction(e -> {
 	    	//Page.saveToFile(page[page_index], basic_path, sceneMain.setName.getText());
-	    	PDF.toPDF(page, page_maxIndex, "", sceneMain.setName.getText());
+	    	PDF.toPDF(page, page_maxIndex, basic_path, sceneMain.setName.getText());
 	    	sceneMain.setName.clear();
 	    });
 	    sceneMain.nextPageButton.setOnAction(e -> {
 	    	nextPageButtonFunction();
 	    });
 	    sceneMain.previousPageButton.setOnAction(e -> {
-	    	page_index--;
-	    	if(page_index < 0) page_index = 0;
-	    	sceneMain.nowPage.setText(String.valueOf(page_index+1));
-	    	sceneMain.imageViewMain.setImage(SwingFXUtils.toFXImage(page[page_index].outputImage_Buffer, null));
-	    	sceneMain.imageViewTemp.setImage(SwingFXUtils.toFXImage(page[page_index].outputImage_Buffer, null));
+	    	previousPageButtonFunction();
 	    });
 	    //sceneMain.listSchool.property
+	    sceneMain.deleteLastPageButton.setOnAction(e -> {
+	    	//page_maxIndex;
+	    	if(page_index == page_maxIndex && page_index>0){
+	    		previousPageButtonFunction();
+	    	}
+	    	if(page_maxIndex == 0){
+	    		page[0].setAllNull(sceneMain);
+	    	}
+	    	else{
+	        	page[page_maxIndex] = null;
+	        	page_maxIndex--;
+	        	sceneMain.maxPage.setText(String.valueOf(page_maxIndex+1));
+	        	sceneMain.nowPage.setText(String.valueOf(page_index+1));
+	        	if(page[page_index] == null) {
+	        		try{
+	        			page[page_index] = new Page();
+	        		}catch(IOException ioe){
+	        			System.out.println("IOException at create new page object");
+	        		}
+	        	}
+	        	sceneMain.imageViewMain.setImage(SwingFXUtils.toFXImage(page[page_index].outputImage_Buffer, null));
+	        	sceneMain.imageViewTemp.setImage(SwingFXUtils.toFXImage(Page.recentImage_Buffer, null));
+	    	}
+	    	
+	    	
+	    	
+	    	
+	    	
+	    	
+	    	
+	    });
 	    
 	    sceneMain.problemNumber.setOnKeyPressed(new EventHandler<KeyEvent>(){
 	    	@Override
@@ -170,6 +184,7 @@ public class Main extends Application {
 	    		}
 	    	}
 	    });
+	    
 	    sceneMain.schoolGroup.selectedToggleProperty().addListener(new ChangeListener<Toggle>(){
 	    	@Override
 			public void changed(ObservableValue<? extends Toggle> observable, Toggle oldValue, Toggle newValue) {
@@ -186,9 +201,10 @@ public class Main extends Application {
 	    });
 	    
 	    
+	    
 	    stage.setScene(sceneMain.Scenemain);
 	    System.out.println("setScene");
-	    stage.setTitle("« ¡Óºˆ«–ø¯ ø¿¥‰≥Î∆Æ ª˝º∫±‚");
+	    stage.setTitle("ÌïÑÏ¶à ÏàòÌïôÌïôÏõê Ïò§ÎãµÎÖ∏Ìä∏ ÏÉùÏÑ±Í∏∞");
 	    stage.show();
 	  }
 }

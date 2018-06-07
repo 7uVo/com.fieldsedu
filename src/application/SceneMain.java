@@ -22,7 +22,7 @@ public class SceneMain {
 	ComboBox<String> listMiddleSchoolWorkbook, listSchool, listSemester, listGrade, listHighSchoolSubject, listHighSchoolWorkbook;
 	Label workbookMiddleSchool,workbookHighSchool, school, semester, grade, problem,problemSHOULDDELETE, setname, nowPage, maxPage, tempLabel, subject;
 	TextField setName, problemNumber;
-	Button addButton, exportButton, deleteButton, deleteAllButton;
+	Button addButton, exportButton, deleteButton, deleteAllButton, deleteLastPageButton;
 	Button nextPageButton, previousPageButton; 
 	MenuBar menuBar;
 	RadioButton middleSchoolRadioButton, highSchoolRadioButton;
@@ -37,42 +37,42 @@ public class SceneMain {
 		listHighSchoolSubject = new ComboBox<String>();
 		listHighSchoolWorkbook = new ComboBox<String>();
 		
-		listMiddleSchoolWorkbook.setItems(FXCollections.observableArrayList("°³³ä¿ø¸®RPM", "½ëSSEN"));
-		listSchool.setItems(FXCollections.observableArrayList("ÁßÇĞ±³","°íµîÇĞ±³"));
-		listSemester.setItems(FXCollections.observableArrayList("1ÇĞ±â","2ÇĞ±â"));
-		listGrade.setItems(FXCollections.observableArrayList("1ÇĞ³â","2ÇĞ³â","3ÇĞ³â"));
-		listHighSchoolSubject.setItems(FXCollections.observableArrayList("¼öÇĞ1","¼öÇĞ2","¹ÌÀûºĞ1","¹ÌÀûºĞ2","È®·ü°úÅë°è","±âÇÏ¿Íº¤ÅÍ"));
-		listHighSchoolWorkbook.setItems(FXCollections.observableArrayList("°³³ä¿ø¸®RPM", "½ëSSEN", "ºí·¢¶óº§", "ÀÏÇ°"));
+		listMiddleSchoolWorkbook.setItems(FXCollections.observableArrayList("ê°œë…ì›ë¦¬RPM", "ìˆSSEN"));
+		listSchool.setItems(FXCollections.observableArrayList("ì¤‘í•™êµ","ê³ ë“±í•™êµ"));
+		listSemester.setItems(FXCollections.observableArrayList("1í•™ê¸°","2í•™ê¸°"));
+		listGrade.setItems(FXCollections.observableArrayList("1í•™ë…„","2í•™ë…„","3í•™ë…„"));
+		listHighSchoolSubject.setItems(FXCollections.observableArrayList("ìˆ˜í•™1","ìˆ˜í•™2","ë¯¸ì ë¶„1","ë¯¸ì ë¶„2","ê¸°í•˜ì™€ë²¡í„°","í™•ë¥ ê³¼í†µê³„"));
+		listHighSchoolWorkbook.setItems(FXCollections.observableArrayList("ê°œë…ì›ë¦¬RPM", "ìˆSSEN", "ì¼í’ˆ", "ê¸°íƒ€1", "ê¸°íƒ€2", "ê¸°íƒ€3"));
 	}
 	void setLabel(){
-		workbookMiddleSchool = new Label("¹®Á¦Áı :");
+		workbookMiddleSchool = new Label("ë¬¸ì œì§‘ :");
 		workbookMiddleSchool.setFont(new Font(15));
-		workbookHighSchool = new Label("¹®Á¦Áı :");
+		workbookHighSchool = new Label("ë¬¸ì œì§‘ :");
 		workbookHighSchool.setFont(new Font(15));
-		school = new Label("ÇĞ±³ :");
+		school = new Label("í•™êµ :");
 		school.setFont(new Font(15));
-		semester = new Label("ÇĞ±â :");
+		semester = new Label("í•™ê¸° :");
 		semester.setFont(new Font(15));
-		grade = new Label("ÇĞ³â :");
+		grade = new Label("í•™ë…„ :");
 		grade.setFont(new Font(15));
-		problem = new Label("¹®Á¦¹øÈ£ :");
+		problem = new Label("ë¬¸ì œë²ˆí˜¸ :");
 		problem.setFont(new Font(15));
 		nowPage = new Label("1");
 		tempLabel = new Label("/");
 		maxPage = new Label("1");
-		setname = new Label("ÀÌ¸§ ¼³Á¤");
+		setname = new Label("ì €ì¥ë  íŒŒì¼ ê²½ë¡œ / ì´ë¦„");
 		setname.setFont(new Font(15));
-		subject = new Label("°ú¸ñ :");
+		subject = new Label("ê³¼ëª© :");
 		subject.setFont(new Font(15));
 	}
 	void setButton(){
 		schoolGroup = new ToggleGroup();
-		middleSchoolRadioButton = new RadioButton("ÁßÇĞ±³");
-		middleSchoolRadioButton.setUserData("ÁßÇĞ±³");
+		middleSchoolRadioButton = new RadioButton("ì¤‘í•™êµ");
+		middleSchoolRadioButton.setUserData("ì¤‘í•™êµ");
 		middleSchoolRadioButton.setToggleGroup(schoolGroup);
 		middleSchoolRadioButton.setSelected(true);
-		highSchoolRadioButton = new RadioButton("°íµîÇĞ±³");
-		highSchoolRadioButton.setUserData("°íµîÇĞ±³");
+		highSchoolRadioButton = new RadioButton("ê³ ë“±í•™êµ");
+		highSchoolRadioButton.setUserData("ê³ ë“±í•™êµ");
 		highSchoolRadioButton.setToggleGroup(schoolGroup);
 		addButton = new Button("add");
 		exportButton = new Button("export");
@@ -80,7 +80,7 @@ public class SceneMain {
 		deleteAllButton = new Button("deleteAll");
 		nextPageButton = new Button("next Page");
 		previousPageButton = new Button("previous Page");
-		
+		deleteLastPageButton = new Button("delete LastPage");
 	}
 	void setGap(){
 		
@@ -100,7 +100,6 @@ public class SceneMain {
 		imageViewMain = new ImageView(SwingFXUtils.toFXImage(Page.backGround_Buffer,  null));
 		imageViewMain.setFitHeight(877);
 		imageViewMain.setFitWidth(620);
-		//imageViewTemp ´Â add ¹öÆ°À» ´­·¶À» ¶§ ÃÊ±âÈ­¸¦ ÇÏ´Â Çü½ÄÀ¸·Î ÇØ¾ßÇÒ µí ¶Ç´Â ÀÓ½Ã ÆÄÀÏÀ» ¸¸µé¾î¼­ initÇÔ¼ö¿¡¼­ ÃÊ±âÈ­ ½ÃÄÑÁÖ´Â Çü½ÄÀ¸·Î °í°í
 		imageViewTemp = new ImageView(SwingFXUtils.toFXImage(Page.backGround_Buffer, null));
 		imageViewTemp.setFitHeight(500);
 		imageViewTemp.setFitWidth(500);
@@ -170,6 +169,7 @@ public class SceneMain {
 		PageButtonBox.getChildren().add(tempLabel);
 		PageButtonBox.getChildren().add(maxPage);
 		PageButtonBox.getChildren().add(nextPageButton);
+		PageButtonBox.getChildren().add(deleteLastPageButton);
 		PageButtonBox.setSpacing(30);
 		
 		

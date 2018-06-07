@@ -13,7 +13,13 @@ import javax.imageio.ImageIO;
 
 //import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
+import javafx.scene.layout.HBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 public class Page {
 	static Image backGround;
@@ -106,10 +112,24 @@ public class Page {
 			}
 			image_Buffer[index] = deepCopy_BufferedImage(recentImage_Buffer);
 		}catch(IOException i){
+			Stage dialog2 = new Stage(StageStyle.UTILITY);
+			dialog2.initModality(Modality.WINDOW_MODAL);
+			dialog2.initOwner(sceneMain.Scenemain.getWindow());
+			dialog2.setTitle("setImageFunction error");
+			dialog2.setScene(new Scene(new HBox(new Label("problem image open error! path is : " + path))));
+			dialog2.setResizable(false);;
+			dialog2.show();
 			System.out.println("image_Buffer open Error! index is : " + index);
 			System.out.println("path is : " + path);
 			return true;
 		}
+		Stage dialog3 = new Stage(StageStyle.UTILITY);
+//		dialog3.initModality(Modality.WINDOW_MODAL);
+//		dialog3.initOwner(sceneMain.Scenemain.getWindow());
+//		dialog3.setTitle("setImage Success");
+//		dialog3.setScene(new Scene(new HBox(new Label("now path is : " + path))));
+//		dialog3.setResizable(false);;
+//		dialog3.show();
 		image[index] = SwingFXUtils.toFXImage(image_Buffer[index], null);
 		sceneMain.imageViewTemp.setImage(SwingFXUtils.toFXImage(recentImage_Buffer,  null));
 		
@@ -272,7 +292,6 @@ public class Page {
 	    }
 	  }
 	/*
-	 * sbi 는 크기 조정을 해야하는 BufferedImage object
 	 * dest_Width, dest_Height is destination of each length
 	 * sclaeRate is how much multiply to sbi
 	 * */
