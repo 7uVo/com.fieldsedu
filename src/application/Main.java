@@ -72,18 +72,16 @@ public class Main extends Application {
 			
 		}
 		else{
-			basic_path = new String("G:\\0.�п�����\\�п���ȹ\\���������\\�л��������α׷�����\\com.fieldsedu");
+			basic_path = new String("G:\\com.fieldsedu");
 		}
-		sceneMain = new SceneMain();	
-		//basic_path = new File("").getAbsolutePath();
-		
+		sceneMain = new SceneMain();
 	}
 	
-	private void addButtonFunction(){
+	void addButtonFunction(){
 		String path = new String();
-    	String temp = "\\";
+    	String temp = "//";
     	if(sceneMain.middleSchoolRadioButton.isSelected()){
-    		path = basic_path + temp + sceneMain.middleSchoolRadioButton.getUserData() + temp + sceneMain.listGrade.getValue() + temp + sceneMain.listSemester.getValue() + temp + sceneMain.listMiddleSchoolWorkbook.getValue() + temp + sceneMain.problemNumber.getText() + ".jpg";    		
+    		path = basic_path + temp + sceneMain.middleSchoolRadioButton.getUserData() + temp + sceneMain.listGrade.getValue() + temp + sceneMain.listSemester.getValue() + temp + sceneMain.listMiddleSchoolWorkbook.getValue() + temp + sceneMain.problemNumber.getText() + ".jpg";
     	}
     	else if(sceneMain.highSchoolRadioButton.isSelected()){
     		path = basic_path + temp + sceneMain.highSchoolRadioButton.getUserData() + temp + sceneMain.listHighSchoolSubject.getValue() + temp + sceneMain.listHighSchoolWorkbook.getValue() + temp + sceneMain.problemNumber.getText() + ".jpg";
@@ -94,14 +92,14 @@ public class Main extends Application {
     	}
     	
 	}
-	private void previousPageButtonFunction(){
+	void previousPageButtonFunction(){
 		page_index--;
     	if(page_index < 0) page_index = 0;
     	sceneMain.nowPage.setText(String.valueOf(page_index+1));
     	sceneMain.imageViewMain.setImage(SwingFXUtils.toFXImage(page[page_index].outputImage_Buffer, null));
     	sceneMain.imageViewTemp.setImage(SwingFXUtils.toFXImage(page[page_index].outputImage_Buffer, null));
 	}
-	private void nextPageButtonFunction(){
+	void nextPageButtonFunction(){
 		page_index++;
     	if(page_index >= 100) page_index = 99;
     	page_maxIndex = Math.max(page_maxIndex, page_index);
@@ -166,13 +164,7 @@ public class Main extends Application {
 	        	sceneMain.imageViewMain.setImage(SwingFXUtils.toFXImage(page[page_index].outputImage_Buffer, null));
 	        	sceneMain.imageViewTemp.setImage(SwingFXUtils.toFXImage(Page.recentImage_Buffer, null));
 	    	}
-	    	
-	    	
-	    	
-	    	
-	    	
-	    	
-	    	
+
 	    });
 	    
 	    sceneMain.problemNumber.setOnKeyPressed(new EventHandler<KeyEvent>(){

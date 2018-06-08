@@ -37,12 +37,12 @@ public class SceneMain {
 		listHighSchoolSubject = new ComboBox<String>();
 		listHighSchoolWorkbook = new ComboBox<String>();
 		
-		listMiddleSchoolWorkbook.setItems(FXCollections.observableArrayList("개념원리RPM", "쎈SSEN"));
+		listMiddleSchoolWorkbook.setItems(FXCollections.observableArrayList("개념원리RPM", "쎈SSEN", "기타1", "기타2", "기타3"));
 		listSchool.setItems(FXCollections.observableArrayList("중학교","고등학교"));
 		listSemester.setItems(FXCollections.observableArrayList("1학기","2학기"));
 		listGrade.setItems(FXCollections.observableArrayList("1학년","2학년","3학년"));
 		listHighSchoolSubject.setItems(FXCollections.observableArrayList("수학1","수학2","미적분1","미적분2","기하와벡터","확률과통계"));
-		listHighSchoolWorkbook.setItems(FXCollections.observableArrayList("개념원리RPM", "쎈SSEN", "일품", "기타1", "기타2", "기타3"));
+		listHighSchoolWorkbook.setItems(FXCollections.observableArrayList("개념원리RPM", "쎈SSEN", "일품", "기타1", "기타2", "기타3", "기타4", "기타5"));
 	}
 	void setLabel(){
 		workbookMiddleSchool = new Label("문제집 :");

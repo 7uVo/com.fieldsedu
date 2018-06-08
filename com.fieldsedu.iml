@@ -417,7 +417,7 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="module-library">
+    <orderEntry type="module-library" exported="">
       <library>
         <CLASSES>
           <root url="jar://$MODULE_DIR$/resources/itextpdf-5.5.13.jar!/" />
@@ -426,7 +426,7 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="module-library">
+    <orderEntry type="module-library" exported="">
       <library>
         <CLASSES>
           <root url="jar://$MODULE_DIR$/resources/itext-1.3.1.jar!/" />
@@ -469,5 +469,6 @@
         </SOURCES>
       </library>
     </orderEntry>
+    <orderEntry type="library" name="barcodes-7.0.7-javadoc" level="project" />
   </component>
 </module>

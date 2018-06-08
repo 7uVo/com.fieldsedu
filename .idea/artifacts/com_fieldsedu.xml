@@ -1,0 +1,13 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="com.fieldsedu">
+    <output-path>$PROJECT_DIR$/classes/artifacts/com_fieldsedu</output-path>
+    <root id="archive" name="com.fieldsedu.jar">
+      <element id="archive" name="com_fieldsedu.jar">
+        <element id="module-output" name="com.fieldsedu" />
+      </element>
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/META-INF/MANIFEST.MF" />
+      </element>
+    </root>
+  </artifact>
+</component>

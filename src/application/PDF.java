@@ -34,8 +34,10 @@ public class PDF {
 
 	public static void toPDF(Page[] page, int page_maxIndex, String path, String fileName){
 		File outputFile = new File(path + "//" + fileName + ".pdf");
+		System.out.println(path);
 		//FileOutputStream pdfFileout = null;
-		if(outputFile.exists() && !outputFile.isDirectory()){
+		if(outputFile.exists() && !outputFile.isDirectory())
+		{
 			File tempFile = new File(path + "//" + "temp" + ".pdf");
 			outputFile.renameTo(tempFile);
 			System.out.println("outputFile : " + outputFile.getPath());
